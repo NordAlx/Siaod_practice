@@ -133,47 +133,39 @@ struct list {
             last = prev;
         }
     }
-    list create_list_manual() {
-        list new_list;
+    void create_list_manual() {
         std::string value;
-
-        std::cout << "Enter values for the list (type 'done' when finished):" << std::endl;
+        std::cout << "Вводите значения. Чтобы оастановиться введите 'done':" << std::endl;
         while (true) {
-            std::cout << "Value: ";
+            std::cout << "Значение: ";
             std::cin >> value;
-
             if (value == "done") {
                 break;
             }
-
-            new_list.push_back(value);
+            push_back(value);
         }
-
-        return new_list;
     }
-    list create_list_from_array(std::string values[], int size) {
-        list new_list;
+    void create_list_from_array(std::string values[], int size) {
         for (int i = 0; i < size; i++) {
-            new_list.push_back(values[i]);
+            push_back(values[i]);
         }
-        return new_list;
     }
 
-    bool has_duplicates() {
+    std::string has_duplicates() {
         if (is_empty()) {
-            return false;
+            return "no";
         }
         std::unordered_set<std::string> seen_values;
         Node* current = first;
         while (current) {
             if (seen_values.find(current->val) != seen_values.end()) {
-                return true;
+                return current->val;
             }
 
             seen_values.insert(current->val);
             current = current->next;
         }
-        return false; 
+        return "no";
     }
     void remove_max() {
         if (is_empty()) {
@@ -207,28 +199,18 @@ struct list {
         if (is_empty()) {
             return;
         }
-        Node* new_node = new Node(new_value);
         int pos = 1;
         Node* prev = nullptr;
         Node* current = first;
         while (current) {
+            Node* new_node = new Node(new_value);
             if (pos % 2 == 0) {
                 new_node->next = current;
-                if (prev) {
-                    prev->next = new_node;
-                }
-                else {
-                    first = new_node;
-                }
-                prev = new_node;
+                prev->next = new_node;
             }
             prev = current;
             current = current->next;
             pos++;
-        }
-        if (pos % 2 == 0) {
-            prev->next = new_node;
-            last = new_node;
         }
     }
     void menu() {
@@ -241,7 +223,8 @@ struct list {
         std::cout << "6.Создать список из существующего" << std::endl;
         std::cout << "7.Определить, есть ли дубликаты" << std::endl;
         std::cout << "8.Загадочная функция)))" << std::endl;
-        std::cout << "9.Выйти из программы" << std::endl;
+        std::cout << "9.Создать массив самостоятельно" << std::endl;
+        std::cout << "10.Выйти из программы" << std::endl;
         std::cout << "Выберите действие: ";
         choice();
     }
@@ -254,43 +237,49 @@ struct list {
         switch (c) {
         case 1:
             std::cin >> a;
-            push_back(a);
+            this -> push_back(a);
             break;
         case 2:
-            print();
+            this-> print();
             break;
         case 3:
             std::cin >> a;
-            remove_by_key(a);
+            this->remove_by_key(a);
             break;
         case 4:
-            remove_max();
+            this->remove_max();
             break;
         case 5:
             std::cin >> a;
-            insert_first(a);
+            this->insert_first(a);
             break;
         case 6:
-            create_list_from_array(arr, 10);
+            this->create_list_from_array(arr, 10);
             break;
         case 7:
-            has_duplicates();
+            std::cout << this->has_duplicates() << std::endl;
             break;
         case 8:
             std::cin >> a;
-            insert_before_even(a);
+            this->insert_before_even(a);
             break;
         case 9:
+            create_list_manual();
+            break;
+        case 10:
             return;
         }
+        std::cout << std::endl;
         menu();
     }
 };
 
 int main()
 {
-    setlocale(LC_CTYPE, "Russian");
+    setlocale(LC_ALL, "Russian");
     list lst;
     lst.menu();
+    lst.push_back("3");
+    lst.print();
     return 0;
 }
